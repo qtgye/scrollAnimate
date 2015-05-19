@@ -14,6 +14,11 @@
                     targetElem = $(targetId),
                     targetTop = targetElem.offset().top,
                     speed = (Math.ceil(targetTop/1000))*500 ;
+
+                // update targetTop on window resize
+                $(window).resize(function () {
+                    targetTop = targetElem.offset().top;
+                });
                 
                 elem.click(function(e){
                     e.preventDefault();
