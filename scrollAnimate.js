@@ -1,10 +1,13 @@
 // the scrollAnimate plugin
 ;(function($,window,document,undefined){
 
-    $.fn.scrollAnimate = function(){
+    // store target id, in order to animate scroll on window resize
+    var currId = null;
+
+    $.fn.scrollAnimate = function(s){
 
         // scrollObj Class
-        var scrollObj = function(elem){
+        var scrollObj = function(elem,speed){
 
             // create object if element has an href attribute, restricting it to anchor tags
             if ( elem.attr('href') )
@@ -13,18 +16,32 @@
                     targetId = elem.attr('href'),
                     targetElem = $(targetId),
                     targetTop = targetElem.offset().top,
-                    speed = (Math.ceil(targetTop/1000))*500 ;
+                    speed = elem.attr('data-speed') ? Number(elem.attr('data-speed')) : ( speed ? speed : 500 ) ;
 
                 // update targetTop on window resize
                 $(window).resize(function () {
+
                     targetTop = targetElem.offset().top;
+
+                    // animate scroll if there is current scroll target
+                    if (currId && currId == targetId ) {
+                        animateScroll();
+                    }                    
                 });
+
+                // animate scroll
+                function animateScroll () {
+                    $('html,body').stop().animate({
+                        scrollTop : targetTop
+                    },speed,'easeOutQuint');
+                }
+
                 
                 elem.click(function(e){
                     e.preventDefault();
-                    $('html,body').animate({
-                        scrollTop : targetTop
-                    },speed,'easeInOutQuint');
+                    currId = targetId;                    
+                    animateScroll();
+                    
                 });
             }
             else
@@ -35,7 +52,7 @@
         }        
         
         return this.each(function () {            
-            var scrollObjIns = new scrollObj($(this));
+            var scrollObjIns = new scrollObj($(this),s);
         });     
         
     };
