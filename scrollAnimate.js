@@ -1,7 +1,7 @@
 // the scrollAnimate plugin
 ;(function($,window,document,undefined){
 
-    var scrollAnimate = (function(){        
+    $.fn.scrollAnimate = function(){
 
         // scrollObj Class
         var scrollObj = function(elem){
@@ -21,18 +21,14 @@
             
         }        
         
-        return {
-            init : function(){
-                $('[data-scroll]').each(function(){
-                    var scrollObjIns = new scrollObj($(this));
-                });
-            }
-        };        
+        return this.each(function () {
+            var scrollObjIns = new scrollObj($(this));
+        });     
         
-    })();
+    };
     
     $(document).ready(function(){
-        scrollAnimate.init();
+        $('[data-scroll]').scrollAnimate();
     });
 
 })(jQuery,window,document,undefined);
